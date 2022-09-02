@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-import libjst
+from jst.structure.init import main
 
 
 if __name__ == '__main__':
-    libjst.main()
+    main()
 
