@@ -1,4 +1,7 @@
 
+import collections
+
+
 def kvlm_parse(raw, start=0, dct=None):
     if not dct:
         dct = collections.OrderedDict()
