@@ -30,8 +30,11 @@ class JstRepository(object):
         if cf and os.path.exists(cf):
             self.conf.read([cf])
         elif not force:
-            raise Exception("Configuration file missing")
-
+            self.logger.error(
+                'Finding Configuration',
+                'Configuration file missing.'
+            )
+            return
         if not force:
             vers = int(self.conf.get("core", "repositoryformatversion"))
             if vers != 0:
@@ -47,7 +50,6 @@ class JstRepository(object):
             example, repo_file(r, \"refs\", \"remotes\", \"origin\", \"HEAD\") will create
             .jst/refs/remotes/origin.
         """
-
         if self.repo_dir(repo, *path[:-1], mkdir=mkdir):
             return self.repo_path(repo, *path)
     
@@ -113,7 +115,7 @@ class JstRepository(object):
     
     def repo_find(self, path=".", required=True):
         path = os.path.realpath(path)
-
+        print(path)
         if os.path.isdir(os.path.join(path, ".jst")):
             return JstRepository(path)
 
@@ -125,7 +127,8 @@ class JstRepository(object):
             # os.path.join("/", "..") == "/":
             # If parent==path, then path is root.
             if required:
-                raise Exception("No git directory.")
+                self.logger.error('Serching failed', "No .jst directory.")
+                return False
             else:
                 return None
         # Recursive case

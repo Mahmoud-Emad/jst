@@ -221,7 +221,7 @@ docker-compose.deploy.yml
 docker/caddy/certs/
 
 # Artifacts:
-.gitlab/.svn/
+.jstlab/.svn/
 artifacts/
 
 # mypy:
