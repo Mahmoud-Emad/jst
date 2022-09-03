@@ -106,5 +106,27 @@ class JstRepository(object):
         with open(self.repo_file(repo, "config"), "w") as f:
             config = repo_default_config()
             config.write(f)
+        if not './' in args.path:
+            args.path = "./{}".format(args.path)
         self.logger.success('Successfully', 'created repository in \'{}\' dir.'.format(args.path))
         return repo
+    
+    def repo_find(self, path=".", required=True):
+        path = os.path.realpath(path)
+
+        if os.path.isdir(os.path.join(path, ".jst")):
+            return JstRepository(path)
+
+        # If we haven't returned, recurse in parent, if w
+        parent = os.path.realpath(os.path.join(path, ".."))
+
+        if parent == path:
+            # Bottom case
+            # os.path.join("/", "..") == "/":
+            # If parent==path, then path is root.
+            if required:
+                raise Exception("No git directory.")
+            else:
+                return None
+        # Recursive case
+        return self.repo_find(parent, required)
